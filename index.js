@@ -18,6 +18,12 @@ async function run(){
    try{
      await client.connect();
      const fruitsCollection = client.db("fruitsInventory").collection("fruits");
+     //post fruit
+     app.post('/fruits',async(req,res)=>{
+         const fruit = req.body;
+         const result = await fruitsCollection.insertOne(fruit);
+         res.send(result);
+     })
      //get all
      app.get('/fruits',async(req,res)=>{
         const query = {};
