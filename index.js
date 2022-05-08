@@ -18,13 +18,14 @@ async function run(){
    try{
      await client.connect();
      const fruitsCollection = client.db("fruitsInventory").collection("fruits");
+     const supportsCollection = client.db("fruitsInventory").collection("supports");
      //post fruit
      app.post('/fruits',async(req,res)=>{
          const fruit = req.body;
          const result = await fruitsCollection.insertOne(fruit);
          res.send(result);
      })
-     //get all
+     //get all products
      app.get('/fruits',async(req,res)=>{
         const query = {};
         const cursor = fruitsCollection.find(query);
@@ -39,6 +40,13 @@ async function run(){
         console.log(fruit);
         res.send(fruit);
 
+     })
+     //get supports data
+     app.get('/supports',async(req,res)=>{
+        const query = {};
+        const cursor = supportsCollection.find(query);
+        const supports = await cursor.toArray();
+        res.send(supports);
      })
      //update fruit
      app.put('/fruits/:id',async(req,res)=>{
