@@ -68,18 +68,16 @@ async function run() {
     app.get("/items", async (req, res) => {
       const email = req.query.email;
       console.log(email);
-      const query = {email};
+      const query = { email };
       const cursor = fruitsCollection.find(query);
       const items = await cursor.toArray();
       res.send(items);
-      
     });
     //get single
     app.get("/fruits/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const fruit = await fruitsCollection.findOne(query);
-      console.log(fruit);
       res.send(fruit);
     });
     //get services
