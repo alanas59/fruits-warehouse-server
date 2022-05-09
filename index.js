@@ -12,18 +12,17 @@ app.use(express.json());
 
 function verifyJWT(req, res, next) {
   const authHeader = req.headers.authorization;
-  if(!authHeader){
-      return res.status(401).send({message:'unauthorized access'});
+  if (!authHeader) {
+    return res.status(401).send({ message: "unauthorized access" });
   }
-  const token = authHeader.split(' ')[1];
-  jwt.verify(token,process.env.ACCESS_TOKEN_SECRET, function(err, decoded) {
-     if(err){
-         return res.status(403).send({message:'FORBIDDEN'});
-
-     }
-     req.decoded = decoded;
-     console.log('Decoded',decoded);
-  })
+  const token = authHeader.split(" ")[1];
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, function (err, decoded) {
+    if (err) {
+      return res.status(403).send({ message: "FORBIDDEN" });
+    }
+    req.decoded = decoded;
+    console.log("Decoded", decoded);
+  });
 
   next();
 }
@@ -58,21 +57,22 @@ async function run() {
       const result = await fruitsCollection.insertOne(fruit);
       res.send(result);
     });
-    //get all products
-    app.get("/fruits",async (req, res) => {
+    //get all fruits
+    app.get("/fruits", async (req, res) => {
       const query = {};
       const cursor = fruitsCollection.find(query);
       const fruits = await cursor.toArray();
       res.send(fruits);
     });
     //get  products using email
-    app.get("/fruits",async (req, res) => {
+    app.get("/items", async (req, res) => {
       const email = req.query.email;
       console.log(email);
-      const query = {};
+      const query = {email};
       const cursor = fruitsCollection.find(query);
-      const fruits = await cursor.toArray();
-      res.send(fruits);
+      const items = await cursor.toArray();
+      res.send(items);
+      
     });
     //get single
     app.get("/fruits/:id", async (req, res) => {
@@ -82,7 +82,7 @@ async function run() {
       console.log(fruit);
       res.send(fruit);
     });
-   //get services
+    //get services
     app.get("/services", async (req, res) => {
       const query = {};
       const cursor = servicesCollection.find(query);
