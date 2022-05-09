@@ -39,9 +39,9 @@ async function run() {
   try {
     await client.connect();
     const fruitsCollection = client.db("fruitsInventory").collection("fruits");
-    const supportsCollection = client
+    const servicesCollection = client
       .db("fruitsInventory")
-      .collection("supports");
+      .collection("services");
 
     //AUTH
     app.post("/login", async (req, res) => {
@@ -59,7 +59,16 @@ async function run() {
       res.send(result);
     });
     //get all products
-    app.get("/fruits",verifyJWT,async (req, res) => {
+    app.get("/fruits",async (req, res) => {
+      const query = {};
+      const cursor = fruitsCollection.find(query);
+      const fruits = await cursor.toArray();
+      res.send(fruits);
+    });
+    //get  products using email
+    app.get("/fruits",async (req, res) => {
+      const email = req.query.email;
+      console.log(email);
       const query = {};
       const cursor = fruitsCollection.find(query);
       const fruits = await cursor.toArray();
@@ -73,12 +82,12 @@ async function run() {
       console.log(fruit);
       res.send(fruit);
     });
-    //get supports data
-    app.get("/supports", async (req, res) => {
+   //get services
+    app.get("/services", async (req, res) => {
       const query = {};
-      const cursor = supportsCollection.find(query);
-      const supports = await cursor.toArray();
-      res.send(supports);
+      const cursor = servicesCollection.find(query);
+      const services = await cursor.toArray();
+      res.send(services);
     });
     //update fruit
     app.put("/fruits/:id", async (req, res) => {
